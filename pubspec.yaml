@@ -1,0 +1,44 @@
+name: jumla
+description: "A new Flutter project."
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=3.7.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+  get: ^4.6.6
+  flutter_screenutil: ^5.9.0
+  image_picker: ^1.0.4
+  dotted_border: ^2.0.0
+  flutter_dotenv: ^5.2.1
+  shared_preferences: ^2.2.2
+  percent_indicator: ^4.2.2
+  fl_chart: ^0.71.0
+
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/png/
+    - .env
+
+  # Add your assets here when needed:
+  # assets:
+  #   - assets/images/logo.png
+
+  # Add fonts here if using custom fonts:
+  # fonts:
+  #   - family: YourFontFamily
+  #     fonts:
+  #       - asset: assets/fonts/YourFont.ttf
