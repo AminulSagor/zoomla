@@ -1,7 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+
+import '../offer/offer_service.dart';
+import '../storage/token_storage.dart';
 
 class OfferDialog extends StatefulWidget {
-  const OfferDialog({super.key});
+
+  final int productId;
+  const OfferDialog({super.key, required this.productId});
+
 
   @override
   State<OfferDialog> createState() => _OfferDialogState();
@@ -81,10 +89,18 @@ class _OfferDialogState extends State<OfferDialog> {
               ),
               const SizedBox(height: 16),
               ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
+                  final token = await TokenStorage.getToken(); // import your token utility
+                  final response = await OfferService.addOffer(
+                    token: token!,
+                    productId: widget.productId,
+                    discount: int.parse(percentController.text),
+                    minimumPurchase: 1,
+                  );
                   Navigator.pop(context);
-                  print("Confirmed %: ${percentController.text}");
+                  Get.snackbar("Status", response['message'] ?? 'Offer submitted');
                 },
+
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue,
                   foregroundColor: Colors.white,
@@ -131,10 +147,18 @@ class _OfferDialogState extends State<OfferDialog> {
 
               const SizedBox(height: 16),
               ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
+                  final token = await TokenStorage.getToken();
+                  final response = await OfferService.addOffer(
+                    token: token!,
+                    productId: widget.productId,
+                    discount: int.parse(bulkPriceController.text),
+                    minimumPurchase: int.parse(quantityController.text),
+                  );
                   Navigator.pop(context);
-                  print("Confirmed Bulk: Q=${quantityController.text}, P=${bulkPriceController.text}");
+                  Get.snackbar("Status", response['message'] ?? 'Offer submitted');
                 },
+
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue, // button color
                   foregroundColor: Colors.white, // text color

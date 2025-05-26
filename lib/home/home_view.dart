@@ -41,12 +41,17 @@ class HomeView extends StatelessWidget {
                 padding: EdgeInsets.symmetric(horizontal: 16.w),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: const [
-                    _ActionCard(icon: Icons.list_alt, label: 'Pending'),
-                    _ActionCard(icon: Icons.add, label: 'Create Post'),
-                    _ActionCard(icon: Icons.check_circle, label: 'Approve'),
+                  children: [
+                    _ActionCard(icon: Icons.list_alt, label: 'Pending',onTap: () => Get.toNamed('/pending-product')),
+                    _ActionCard(
+                      icon: Icons.add,
+                      label: 'Create Post',
+                      onTap: () => Get.toNamed('/product-upload'),
+                    ),
+                    _ActionCard(icon: Icons.check_circle, label: 'Approve',onTap: () => Get.toNamed('/approved-product')),
                   ],
                 ),
+
               ),
               SizedBox(height: 24.h),
               Padding(
@@ -91,28 +96,37 @@ class HomeView extends StatelessWidget {
 class _ActionCard extends StatelessWidget {
   final IconData icon;
   final String label;
+  final VoidCallback? onTap; // <-- add this
 
-  const _ActionCard({required this.icon, required this.label});
+  const _ActionCard({
+    required this.icon,
+    required this.label,
+    this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      elevation: 6,
+    return InkWell(
+      onTap: onTap, // <-- use it here
       borderRadius: BorderRadius.circular(8.r),
-      color: Colors.white,
-      child: Container(
-        width: 100.w,
-        height: 60.h,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8.r),
-        ),
-        child: Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(icon, size: 20.sp, color: Colors.black87),
-              Text(label, style: TextStyle(fontSize: 14.sp, color: Colors.black87)),
-            ],
+      child: Material(
+        elevation: 6,
+        borderRadius: BorderRadius.circular(8.r),
+        color: Colors.white,
+        child: Container(
+          width: 100.w,
+          height: 60.h,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(8.r),
+          ),
+          child: Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(icon, size: 20.sp, color: Colors.black87),
+                Text(label, style: TextStyle(fontSize: 14.sp, color: Colors.black87)),
+              ],
+            ),
           ),
         ),
       ),

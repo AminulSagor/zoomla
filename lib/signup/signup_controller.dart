@@ -157,7 +157,7 @@ class SignUpController extends GetxController {
         Get.snackbar("Success", "Login successful");
         // Navigate to home or dashboard
         // Example:
-        // Get.offAllNamed(AppRoutes.dashboard);
+        Get.offAllNamed(AppRoutes.homePage);
       } else {
         Get.snackbar("Login Failed", res['message'] ?? "Unknown error",
             backgroundColor: Colors.red, colorText: Colors.white);

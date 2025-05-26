@@ -1,9 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 
 class AuthService {
-  static const String _baseUrl = 'https://jumlaonline.com/api';
+  static final String? _baseUrl = dotenv.env['BASE_URL'];
 
   static Future<Map<String, dynamic>> sendOtp({
     required String phone,
