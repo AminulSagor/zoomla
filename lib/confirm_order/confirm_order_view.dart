@@ -7,6 +7,7 @@ class ConfirmOrderView extends StatelessWidget {
   final controller = Get.put(ConfirmOrderController());
 
 
+
   void showDeliveryChargeDialog(BuildContext context) {
     final chargeController = TextEditingController(text: controller.deliveryCharge.value.toString());
 
@@ -96,10 +97,9 @@ class ConfirmOrderView extends StatelessWidget {
                     child: const Text("Cancel"),
                   ),
                   ElevatedButton(
-                    onPressed: () {
-                      // Perform approve logic here
-                      Get.back(); // close the dialog
-                      Get.snackbar("Order", "Product Approved", snackPosition: SnackPosition.BOTTOM);
+                    onPressed: () async {
+                      Get.back(); // Close dialog
+                      await controller.approveOrder();
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF5AB2FF),
@@ -136,7 +136,8 @@ class ConfirmOrderView extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Text("12/05/2024", style: TextStyle(color: Colors.black)),
+                Text(controller.formattedOrderDate, style: const TextStyle(color: Colors.black)),
+
               ],
             ),
 
@@ -165,26 +166,38 @@ class ConfirmOrderView extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           SizedBox(height: 16.h),
-                          Text("Fouzia Hussain", style: TextStyle(fontWeight: FontWeight.bold)),
-                          Text("+88016744839"),
+                          Text(controller.customerName, style: const TextStyle(fontWeight: FontWeight.bold)),
+                          Text(controller.customerPhone),
                         ],
                       ),
                     ),
-                    const Icon(Icons.chevron_right),
+                    //const Icon(Icons.chevron_right),
                   ],
                 ),
                 SizedBox(height: 8.h),
-                RichText(
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  text: const TextSpan(
-                    style: TextStyle(fontWeight: FontWeight.w500, color: Colors.black),
-                    children: [
-                      TextSpan(text: 'Home: ', style: TextStyle(fontWeight: FontWeight.bold)),
-                      TextSpan(text: 'Al-Madani Tower, Level-6, Mirboxtula, Sylhet'),
-                    ],
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: RichText(
+                    textAlign: TextAlign.left, // 👈 forces left alignment
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    text: TextSpan(
+                      style: const TextStyle(fontWeight: FontWeight.w500, color: Colors.black),
+                      children: [
+                        const TextSpan(
+                          text: 'Home: ',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        TextSpan(
+                          text: controller.customerAddress,
+                          style: const TextStyle(fontWeight: FontWeight.normal),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
+
+
               ],
             ),
 
@@ -204,11 +217,12 @@ class ConfirmOrderView extends StatelessWidget {
                       children: [
                         ClipRRect(
                           borderRadius: BorderRadius.circular(12),
-                          child: Image.asset(
-                            product['image'],
+                          child: Image.network(
+                            product['image_path'],
                             width: 60,
                             height: 60,
                             fit: BoxFit.cover,
+                            errorBuilder: (_, __, ___) => const Icon(Icons.broken_image),
                           ),
                         ),
                         const SizedBox(width: 12),
@@ -216,16 +230,16 @@ class ConfirmOrderView extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(product['name'], style: const TextStyle(fontWeight: FontWeight.bold)),
-                              Text(product['brand']),
-                              Text('\$${product['price']}', style: const TextStyle(fontWeight: FontWeight.bold)),
+                              Text(product['product_name'] ?? '', style: const TextStyle(fontWeight: FontWeight.bold)),
+                              Text(product['brand'] ?? ''),
+                              Text('\$${product['rate'] ?? ''}', style: const TextStyle(fontWeight: FontWeight.bold)),
                             ],
                           ),
                         ),
                         Container(
                           alignment: Alignment.center,
                           height: 60,
-                          child: Text('Qty: ${product['qty']}'),
+                          child: Text('Qty: ${product['quantity'] ?? ''}'),
                         ),
                       ],
                     ),
@@ -275,7 +289,8 @@ class ConfirmOrderView extends StatelessWidget {
                         Expanded(
                           child: TextField(
                             readOnly: true,
-                            controller: TextEditingController(text: controller.deliveryTime.value),
+                            controller: controller.deliveryTimeController,
+
                             onTap: () async {
                               DateTime? pickedDate = await showDatePicker(
                                 context: context,
@@ -287,8 +302,10 @@ class ConfirmOrderView extends StatelessWidget {
                               if (pickedDate != null) {
                                 final formatted = "${pickedDate.day}/${pickedDate.month}/${pickedDate.year}";
                                 controller.deliveryTime.value = formatted;
+                                controller.deliveryTimeController.text = formatted;
                               }
                             },
+
                             decoration: const InputDecoration(
                               border: InputBorder.none,
                               hintText: 'Delivery date',

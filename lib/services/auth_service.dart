@@ -103,7 +103,7 @@ class AuthService {
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({'phone': phone, 'password': password}),
     );
-
+    print("🔹 Response Body: ${response.body}");
     if (response.statusCode == 200) {
       return jsonDecode(response.body);
     } else {

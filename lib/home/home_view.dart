@@ -11,86 +11,69 @@ class HomeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() {
-      return Scaffold(
-        backgroundColor: Colors.white,
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              Stack(
-                alignment: Alignment.center,
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Stack(
+              alignment: Alignment.center,
+              children: [
+                Image.asset(
+                  'assets/png/header_home.png',
+                  width: 1.sw,
+                  height: 230.h,
+                  fit: BoxFit.cover,
+                ),
+                Positioned(
+                  top: 1.h,
+                  child: Image.asset(
+                    'assets/png/logo.png',
+                    width: 300.w,
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 20.h),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.w),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Image.asset(
-                    'assets/png/header_home.png',
-                    width: 1.sw,
-                    height: 230.h, // Increase this value to make it bigger
-                    fit: BoxFit.cover,
-                  ),
-
-                  Positioned(
-                    top: 1.h,
-                    child: Image.asset(
-                      'assets/png/logo.png',
-                      width: 300.w,
-                    ),
-                  ),
+                  _ActionCard(icon: Icons.list_alt, label: 'Pending', onTap: () => Get.toNamed('/pending-product')),
+                  _ActionCard(icon: Icons.add, label: 'Create Post', onTap: () => Get.toNamed('/product-upload')),
+                  _ActionCard(icon: Icons.check_circle, label: 'Approve', onTap: () => Get.toNamed('/approved-product')),
                 ],
               ),
-              SizedBox(height: 20.h),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.w),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    _ActionCard(icon: Icons.list_alt, label: 'Pending',onTap: () => Get.toNamed('/pending-product')),
-                    _ActionCard(
-                      icon: Icons.add,
-                      label: 'Create Post',
-                      onTap: () => Get.toNamed('/product-upload'),
-                    ),
-                    _ActionCard(icon: Icons.check_circle, label: 'Approve',onTap: () => Get.toNamed('/approved-product')),
-                  ],
-                ),
-
+            ),
+            SizedBox(height: 24.h),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.w),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Recent Email And Transaction",
+                    style: TextStyle(fontSize: 16.sp),
+                  ),
+                  Icon(Icons.arrow_drop_down, size: 24.sp, color: Colors.black),
+                ],
               ),
-              SizedBox(height: 24.h),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.w),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Recent Email And Transaction",
-                      style: TextStyle(
-                        fontSize: 16.sp,
-                      ),
-                    ),
-                    Icon(
-                      Icons.arrow_drop_down,
-                      size: 24.sp,
-                      color: Colors.black,
-                    ),
-                  ],
-                ),
-              ),
-
-              //SizedBox(height: 12.h),
-
-              EmailDonutChart(),
-
-              //SizedBox(height: 20.h),
-              _DashboardStats(),
-              SizedBox(height: 80.h), // Space for bottom navbar
-            ],
-          ),
+            ),
+            EmailDonutChart(),
+            _DashboardStats(),
+            SizedBox(height: 80.h),
+          ],
         ),
-        bottomNavigationBar: BottomNavBar(
-          selectedIndex: controller.selectedIndex.value,
-          onItemTapped: controller.onTabTapped,
-        ),
-      );
-    });
+      ),
+
+      // ✅ Use Obx *only* for this reactive part:
+      bottomNavigationBar: Obx(() => BottomNavBar(
+        selectedIndex: controller.selectedIndex.value,
+      )),
+    );
   }
+
 }
 
 class _ActionCard extends StatelessWidget {

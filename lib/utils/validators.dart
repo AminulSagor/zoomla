@@ -6,7 +6,7 @@ class Validators {
 
   static String? validatePassword(String value) {
     if (value.trim().isEmpty) return "Password is required";
-    if (value.length < 6) return "Password must be at least 6 characters";
+    if (value.length < 4) return "Password must be at least 6 characters";
     return null;
   }
 

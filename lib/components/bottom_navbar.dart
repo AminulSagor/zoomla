@@ -1,15 +1,57 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../storage/token_storage.dart';
+import '../order_list/order_list_view.dart';
+import '../home/home_view.dart';
+import '../product_upload/product_upload_view.dart';
+
+
 class BottomNavBar extends StatelessWidget {
   final int selectedIndex;
-  final Function(int) onItemTapped;
 
   const BottomNavBar({
     super.key,
     required this.selectedIndex,
-    required this.onItemTapped,
   });
+
+  Future<void> _handleNavigation(int index) async {
+    final token = await TokenStorage.getToken();
+
+    // Orders and Profile require login
+    if ((index == 2 || index == 3) && (token == null || token.isEmpty)) {
+      _showLoginRequiredDialog();
+      return;
+    }
+
+    switch (index) {
+      case 0:
+        Get.offAll(() => HomeView());
+        break;
+      case 1:
+        Get.offAll(() => ProductUploadView());
+        break;
+      case 2:
+        Get.offAll(() => OrderListView());
+        break;
+      case 3:
+        //Get.offAll(() => ProfileView());
+        break;
+    }
+  }
+
+  void _showLoginRequiredDialog() {
+    Get.defaultDialog(
+      title: "Login Required",
+      content: const Text("You must log in to access this feature."),
+      textConfirm: "Login",
+      textCancel: "Cancel",
+      onConfirm: () {
+        Get.back(); // Close dialog
+        Get.toNamed('/signup', arguments: {'isLogin': true});
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +60,7 @@ class BottomNavBar extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 12),
       decoration: BoxDecoration(
         color: const Color(0xFF5AB2FF),
-        borderRadius: BorderRadius.circular(8), // 👈 less curved
+        borderRadius: BorderRadius.circular(8),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -44,13 +86,23 @@ class BottomNavBar extends StatelessWidget {
     final color = isSelected ? Colors.white : Colors.white60;
 
     return GestureDetector(
-      onTap: () => onItemTapped(index),
+      onTap: () => _handleNavigation(index),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           iconWidget ?? Icon(icon, color: color),
           const SizedBox(height: 4),
           Text(label, style: TextStyle(color: color, fontSize: 12)),
+          if (isSelected)
+            Container(
+              margin: const EdgeInsets.only(top: 2),
+              height: 3,
+              width: 20,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
         ],
       ),
     );

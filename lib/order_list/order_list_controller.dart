@@ -1,38 +1,46 @@
 import 'package:get/get.dart';
 
+import 'oder_list_service.dart';
+
+
 class OrderListController extends GetxController {
   final selectedTab = 'Pending'.obs;
   final tabs = ['Pending', 'Approved', 'Delivered'];
+  final orders = <Map<String, dynamic>>[].obs;
+  final isLoading = false.obs;
 
-  final orders = [
-    {
-      'name': 'Fouzia Hussain',
-      'phone': '+88016744839',
-      'address': 'Al-Madani Tower, Level-6, Mirboxtula, Sylhet',
-      'status': 'Pending',
-      'image': 'assets/png/customer_home_head.png',
-    },
-    {
-      'name': 'Fouzia Hussain',
-      'phone': '+88016744839',
-      'address': 'Al-Madani Tower, Level-6, Mirboxtula, Sylhet',
-      'status': 'Approved',
-      'image': 'assets/png/customer_home_head.png',
-    },
-    {
-      'name': 'Fouzia Hussain',
-      'phone': '+88016744839',
-      'address': 'Al-Madani Tower, Level-6, Mirboxtula, Sylhet',
-      'status': 'Delivered',
-      'image': 'assets/png/customer_home_head.png',
-    },
-    {
-      'name': 'Fouzia Hussain',
-      'phone': '+88016744839',
-      'address': 'Al-Madani Tower, Level-6, Mirboxtula, Sylhet',
-      'status': 'Approved',
-      'image': 'assets/png/customer_home_head.png',
-    },
-  ];
+  @override
+  void onInit() {
+    super.onInit();
+    fetchOrders(); // fetch default: pending
+    ever(selectedTab, (_) => fetchOrders()); // fetch on tab switch
+  }
 
+  void fetchOrders() async {
+    isLoading.value = true;
+    try {
+      final fetchedOrders = await OrderService.getOrdersByStatus(selectedTab.value.toLowerCase());
+      orders.assignAll(fetchedOrders);
+    } catch (e) {
+      Get.snackbar("Error", e.toString());
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+
+  Future<void> updateOrderStatus(String orderId, String newStatus) async {
+    try {
+      final result = await OrderService.updateOrderStatus(orderId, newStatus);
+
+      if (result['status'] == 'success') {
+        Get.snackbar('Success', result['message'] ?? 'Order updated');
+        fetchOrders(); // Refresh the list
+      } else {
+        Get.snackbar('Failed', result['message'] ?? 'Failed to update status');
+      }
+    } catch (e) {
+      Get.snackbar('Error', e.toString());
+    }
+  }
 }
