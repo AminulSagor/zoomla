@@ -61,103 +61,108 @@ class ApprovedProductsView extends StatelessWidget {
           separatorBuilder: (_, __) => SizedBox(height: 16.h),
           itemBuilder: (context, index) {
             final product = products[index];
-            final imageUrl = product["product_image"] != null
-                ? '${dotenv.env['IMAGE_BASE_URL']}/${product["product_image"]}'
-                : null;
+            final imageUrl = product["product_image"];
 
-            return Container(
-              padding: EdgeInsets.all(12.w),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(16.r),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black12,
-                    blurRadius: 4,
-                    offset: Offset(0, 2),
-                  ),
-                ],
-              ),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(12.r),
-                    child: imageUrl != null
-                        ? Image.network(
-                      imageUrl,
-                      width: 64.w,
-                      height: 64.h,
-                      fit: BoxFit.cover,
-                      errorBuilder: (_, __, ___) => _placeholderImage(),
-                    )
-                        : _placeholderImage(),
-                  ),
-                  SizedBox(width: 12.w),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          product["product_name"] ?? '',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 16.sp,
-                          ),
-                        ),
-                        SizedBox(height: 4.h),
-                        Row(
-                          children: [
-                            Text(
-                              'View Details',
-                              style: TextStyle(
-                                fontSize: 13.sp,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.blue,
-                              ),
+
+            return GestureDetector(
+              onTap: () {
+                final productId = product["id"].toString();
+                Get.toNamed('/product-details/$productId');
+              },
+              child: Container(
+                padding: EdgeInsets.all(12.w),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16.r),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black12,
+                      blurRadius: 4,
+                      offset: Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(12.r),
+                      child: imageUrl != null
+                          ? Image.network(
+                        imageUrl,
+                        width: 64.w,
+                        height: 64.h,
+                        fit: BoxFit.cover,
+                        errorBuilder: (_, __, ___) => _placeholderImage(),
+                      )
+                          : _placeholderImage(),
+                    ),
+                    SizedBox(width: 12.w),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            product["product_name"] ?? '',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 16.sp,
                             ),
-                            SizedBox(width: 4.w),
-                            Icon(Icons.arrow_right_alt, size: 18.w),
-                          ],
-                        ),
-                        SizedBox(height: 4.h),
-                        Text(
-                          _formatDate(product["created_at"]),
-                          style: TextStyle(
-                            fontSize: 13.sp,
-                            color: Colors.grey[700],
                           ),
-                        ),
-                      ],
+                          SizedBox(height: 4.h),
+                          Row(
+                            children: [
+                              Text(
+                                'View Details',
+                                style: TextStyle(
+                                  fontSize: 13.sp,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.blue,
+                                ),
+                              ),
+                              SizedBox(width: 4.w),
+                              Icon(Icons.arrow_right_alt, size: 18.w),
+                            ],
+                          ),
+                          SizedBox(height: 4.h),
+                          Text(
+                            _formatDate(product["created_at"]),
+                            style: TextStyle(
+                              fontSize: 13.sp,
+                              color: Colors.grey[700],
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  SizedBox(width: 8.w),
-                  Container(
-                    padding:
-                    EdgeInsets.symmetric(horizontal: 14.w, vertical: 8.h),
-                    decoration: BoxDecoration(
-                      color: Colors.orange.withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(20.r),
-                    ),
-                    child: GestureDetector(
-                      onTap: () {
-                        showDialog(
-                          context: context,
-                          builder: (_) => OfferDialog(productId: int.parse(product["id"])),
-                        );
-                      },
-                      child: Text(
-                        "Add Offer",
-                        style: TextStyle(
-                          color: Colors.orange,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 13.sp,
+                    SizedBox(width: 8.w),
+                    Container(
+                      padding:
+                      EdgeInsets.symmetric(horizontal: 14.w, vertical: 8.h),
+                      decoration: BoxDecoration(
+                        color: Colors.orange.withOpacity(0.2),
+                        borderRadius: BorderRadius.circular(20.r),
+                      ),
+                      child: GestureDetector(
+                        onTap: () {
+                          showDialog(
+                            context: context,
+                            builder: (_) => OfferDialog(productId: int.parse(product["id"])),
+                          );
+                        },
+                        child: Text(
+                          "Add Offer",
+                          style: TextStyle(
+                            color: Colors.orange,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 13.sp,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             );
           },

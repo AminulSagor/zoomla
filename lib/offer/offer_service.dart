@@ -23,6 +23,7 @@ class OfferService {
         "minimum_purchase": minimumPurchase,
       }),
     );
+    print('🟢 Response Body: ${response.body}');
 
     final data = jsonDecode(response.body);
     return data;

@@ -4,8 +4,9 @@ import 'package:jumla/forget_pass/forget_pass_view.dart';
 import 'package:jumla/home/home_view.dart';
 import 'package:jumla/post_status/approved_view.dart';
 import 'package:jumla/post_status/pending_products_view.dart';
+import 'package:jumla/product_details/product_details_binding.dart';
 import 'package:jumla/product_details/product_details_view.dart';
-import 'package:jumla/product_list/product_list_view.dart';
+
 import 'package:jumla/product_upload/product_upload_view.dart';
 import 'package:jumla/signup/signup_view.dart';
 import 'package:jumla/store_info_upload/store_info_view.dart';
@@ -20,12 +21,13 @@ class AppRoutes {
   static const String changePass = '/change-pass';
   static const String homePage = '/home-page';
   static const String productUpload = '/product-upload';
-  // static const String productList = '/product-list';
+
   static const String approvedProduct = '/approved-product';
   static const String pendingProduct = '/pending-product';
   static const String orderList = '/order-list';
   static const String confirmOrder = '/confirm-order';
-  static const String productDetails = '/product-details';
+  static const String productDetails = '/product-details/:id';
+
 
   static final routes = [
     GetPage(name: signUp, page: () =>  SignUpView()),
@@ -40,6 +42,11 @@ class AppRoutes {
     GetPage(name: orderList, page: () => OrderListView()),
     GetPage(name: confirmOrder, page: () => ConfirmOrderView()),
 
-    GetPage(name: productDetails, page: () => ProductDetailsView()),
+
+    GetPage(
+      name: '/product-details/:id', // ✅ with :id parameter
+      page: () => ProductDetailsView(),
+      binding: ProductDetailsBinding(),
+    ),
   ];
 }

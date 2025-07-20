@@ -60,9 +60,7 @@ class PendingProductsView extends StatelessWidget {
                     child: product["product_image"] != null
                         ? Builder(
                       builder: (context) {
-                        final imageUrl =
-                            '${dotenv.env['IMAGE_BASE_URL']}/${product["product_image"]}';
-
+                        final imageUrl = product["product_image"];
                         return Image.network(
                           imageUrl,
                           width: 64.w,

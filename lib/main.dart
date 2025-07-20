@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           title: 'Jumla Online',
           theme: ThemeData(primarySwatch: Colors.blue),
-          initialRoute: AppRoutes.productDetails,
+          initialRoute: AppRoutes.homePage,
           getPages: AppRoutes.routes,
         );
       },
